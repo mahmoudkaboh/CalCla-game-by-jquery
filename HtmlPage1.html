@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery-3.4.1.js"></script>
+    <meta charset="utf-8" />
+    <title>Calculator Game</title>
+    <style>
+
+
+        #message {
+            border: 2px solid rgba(255,255,255,.5);
+            font-size: 1.75em;
+            padding: .25em .5em .3125em;
+            color: rgba(255,255,255,.5);
+            border-radius: .25em;
+            background: transparent;
+            transition: all .100s;
+            width: auto;
+            height: auto;
+        }
+
+
+        canvas {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        #message {
+            font-family: "Arial Rounded MT Bold","Helvetica Rounded",Arial,sans-serif;
+        }
+
+
+            #message:focus::-webkit-input-placeholder {
+                opacity: .5;
+            }
+
+
+
+        body, html {
+            height: 100%;
+            background-image: url("astronomy-dolomites-evening-1624496.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        input {
+            font-size: 2em;
+            width: 100px;
+            height: 85px;
+        }
+
+        .active {
+            color: darkred;
+            font-weight: bold;
+        }
+
+            .active:hover {
+                background-color: #008CBA;
+                color: white;
+            }
+
+
+        .start, .check, .play, .restart, .exit {
+            color: #0099CC;
+            border: 2px solid #0099CC;
+            border-radius: 8px;
+            padding: 16px 32px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            background: transparent;
+        }
+
+            .start:hover, .check:hover, .play:hover, .restart:hover, .exit:hover {
+                background-color: #008CBA;
+                color: white;
+            }
+
+        .container {
+            display: none;
+        }
+
+        .inner {
+            background-color: aliceblue;
+            opacity: .5;
+        }
+
+        .calc-btn, .calculate-btn, .clear-btn {
+            border: 2px solid;
+            padding: 16px 32px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <div>
+
+            <button class="start">Start Game</button>
+            <button class="play" style="display:none">PLAY</button>
+            <button class="check" style="display:none">CHECK</button>
+            <button class="restart" style="display:none">RESTART</button>
+            <button class="exit" style="display:none">EXIT</button>
+        </div>
+        <table class="container" border="4">
+            <tr>
+                <td colspan="1">
+                    <input class="value" type="text" style="width:415px; color:brown;" size="30" name="Display" placeholder="NUMBER PLAY" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <input class="display" type="text" style="width:415px;" size="30" name="Display" placeholder="Result Of Operation" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="inner">
+                        <tr>
+                            <td><input class="calc-btn" data-role="number" type="button" value="7" disabled></td>
+                            <td><input class="calc-btn" data-role="number" type="button" value="8" disabled></td>
+                            <td><input class="calc-btn" data-role="number" type="button" value="9" disabled></td>
+                            <td><input class="calc-btn fop top" data-role="operator" type="button" value="+" disabled></td>
+                        </tr>
+                        <tr>
+                            <td><input class="calc-btn" data-role="number" type="button" value="4" disabled></td>
+                            <td><input class="calc-btn fop sop" data-role="number" type="button" value="5" disabled></td>
+                            <td><input class="calc-btn" data-role="number" type="button" value="6" disabled></td>
+                            <td><input class="calc-btn sop" data-role="operator" type="button" value="-" disabled></td>
+                        </tr>
+                        <tr>
+                            <td><input class="calc-btn fop top" data-role="number" type="button" value="1" disabled></td>
+                            <td><input class="calc-btn fop sop" data-role="number" type="button" value="2" disabled></td>
+                            <td><input class="calc-btn fop top" data-role="number" type="button" value="3" disabled></td>
+                            <td><input class="calc-btn fop top" data-role="operator" type="button" value="*" disabled></td>
+                        </tr>
+                        <tr>
+                            <td><input class="clear-btn top fop sop"  type="button" value="C" ></td>
+                            <td><input class="calc-btn fop top" data-role="number" type="button" value="0" disabled></td>
+                            <td><input class="calculate-btn sop fop top" type="button" value="=" disabled></td>
+                            <td><input class="calc-btn sop" data-role="operator" type="button" value="/" disabled></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <input type="text" id="message" placeholder="Number of Counting" style="display:none" readonly />
+        </div>
+    </center>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var arr = [10, 5, 15];
+        var counter = 0;
+        var x = 0;
+        var clicked = false;
+        $(".start").one('click', function () {
+            $(".container").show('slow')
+            $(".start").hide();
+            $(".play").show('slow')
+            $("input").prop("disabled", false);
+
+            $(".calc-btn").on('click', function () {
+                if ($(this).attr('data-role') != 'operator') {
+                    $(".display").val($(".display").val() + $(this).val());
+
+                }
+                else {
+                    if ($(".display").val() != '') {
+                        $(".display").val($(".display").val() + $(this).val());
+                        clicked = true;
+                    }
+                }
+
+            });
+
+            $(".clear-btn").on('click', function () {
+                $(".display").val('');
+            });
+            $(".calculate-btn").on('click', function () {
+                var expression = $(".display").val();
+                $(".display").val(eval(expression));
+            });
+        });
+        $(".play").one("click", function () {
+            $(".play").hide();
+            $("input").prop("disabled", true);
+            $(".start").hide();
+            $(".check").show('slow')
+            $(".restart").show('slow')
+            $(".exit").show('slow')
+            $(".fop").prop('disabled', false)
+            $(".fop").addClass("active");
+            $(".value").val("CHECK : " + arr[counter])
+        });
+        $(".check").on("click", function () {
+
+            if ((arr[counter] == $(".display").val()) && (clicked == true)) {
+                $(".fop").removeClass("active");
+                $(".sop").addClass("active");
+                $("#message").val("successful")
+                counter++;
+                x++;
+                $(".value").val("CHECK : " + arr[counter])
+                //$("#f").text("Score is: " + x)
+
+                $(".fop").prop('disabled', true)
+                $(".sop").prop('disabled', false)
+            };
+
+            if (counter == 2) {
+                $(".sop").prop('disabled', true)
+
+                $(".top").prop('disabled', false)
+                $(".sop").removeClass("active");
+                $(".top").addClass("active");
+
+
+
+            }
+            else if (counter == 3) {
+                $(".display").val("FINISHED");
+                $(".top").removeClass("active");
+                $(".sop").removeClass("active");
+
+                $(".value").val("EXCELLENT WORK ")
+                $(".fop").prop('disabled', true)
+                $(".sop").prop('disabled', true)
+                $(".top").prop('disabled', true)
+                $("#message").show("slow");
+                $("#message").val("Your Score Is : " + x);
+
+            }
+
+        });
+        $('.restart').click(function () {
+            location.reload()
+        });
+        $('.exit').click(function () {
+            window.close()
+
+        });
+    });
+
+
+</script>
